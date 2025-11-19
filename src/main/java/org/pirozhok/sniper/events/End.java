@@ -36,6 +36,10 @@ public class End
             // 6. Остановка сужения границы
             BorderShrinkingSystem.stopShrinking();
 
+            // 7. Очищение чата
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
+                    "tellraw @a {\"text\":\"n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\"}");
+
         } catch (Exception e)
         {
             throw new RuntimeException("Ошибка при завершении игры: " + e.getMessage(), e);
