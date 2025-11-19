@@ -1,0 +1,33 @@
+[security]
+# Пароль для работы мода. По умолчанию: default_password
+# Для работы мода необходимо установить правильный пароль
+password = "default_password"
+# Список админов по никнеймам
+admins = ["Admin1", "Admin2"]
+# Список игроков с доступом к читам
+allowedCheaters = ["Player1", "Player2"]
+
+[spawn]
+spawnMode = "random"
+minSpawnY = 60
+skySpawnX = 0.0
+skySpawnY = 120.0
+skySpawnZ = 0.0
+
+[lobby]
+lobbyX = 0.0
+lobbyY = 70.0
+lobbyZ = 0.0
+adminLobbyX = 100.0
+adminLobbyY = 70.0
+adminLobbyZ = 0.0
+
+[game_settings]
+gunsMode = "players" #Default - "players"
+teamsMode = "solo" #Default - "solo"
+borderShrinkEnabled = true #Default - true
+borderShrinkMode = "standard" #Default - "standart"
+
+[chests]
+chestCoordinates = ["100;64;100", "-100;64;-100", "150;64;-150", "-150;64;150"]
+chestItems = ["tacz:pistol@1@{}", "tacz:ammo@16@{}", "tacz:rifle@1@{}", "minecraft:golden_apple@3@{}", "minecraft:ender_pearl@4@{}"]

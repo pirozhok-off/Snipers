@@ -1,0 +1,8 @@
+{
+  "game_start": {
+    "sounds": [
+      "sniper:game_start"
+    ],
+    "subtitle": "Игра началась"
+  }
+}
