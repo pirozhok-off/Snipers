@@ -47,7 +47,7 @@ public class Sniper
 
     public Sniper() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_SPEC, "sniper-common.toml");
         MinecraftForge.EVENT_BUS.register(this);
     }
 
