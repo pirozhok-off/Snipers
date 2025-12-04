@@ -5,7 +5,7 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.pirozhok.sniper.Config;
+import org.pirozhok.sniper.system.States;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +16,9 @@ public class BorderShrinkingSystem {
     private static boolean enabled = false;
 
     public static void startShrinking(MinecraftServer server) {
-        enabled = Config.SERVER.borderShrinkEnabled.get();
-        if (enabled) {
+        enabled = States.isBorderShrinkEnabled();
+        if (enabled)
+        {
             serverData.put(server, new BorderShrinkData());
         }
     }
@@ -38,9 +39,10 @@ public class BorderShrinkingSystem {
 
         data.tickCounter++;
         WorldBorder worldBorder = server.overworld().getWorldBorder();
-        String mode = Config.SERVER.borderShrinkMode.get();
+        String mode = States.getBorderShrinkMode();
 
-        switch (mode) {
+        switch (mode)
+        {
             case "slow" -> handleSlowShrink(server, data, worldBorder);
             case "standard" -> handleStandardShrink(server, data, worldBorder);
             case "fast" -> handleFastShrink(server, data, worldBorder);

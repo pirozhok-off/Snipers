@@ -9,7 +9,6 @@ import org.pirozhok.sniper.Config;
 @Mod.EventBusSubscriber
 public class SecuritySystem 
 {
-
     @SubscribeEvent
     public static void onServerAboutToStart(ServerAboutToStartEvent event) {
         validatePassword();

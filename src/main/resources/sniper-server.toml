@@ -8,7 +8,6 @@ admins = ["Admin1", "Admin2"]
 allowedCheaters = ["Player1", "Player2"]
 
 [spawn]
-spawnMode = "random"
 minSpawnY = 23
 skySpawnX = 94.0
 skySpawnY = 150.0
@@ -21,12 +20,6 @@ lobbyZ = -55.0
 adminLobbyX = 96.0
 adminLobbyY = -18.9
 adminLobbyZ = -50.0
-
-[game_settings]
-gunsMode = "players" #Default - "players"
-teamsMode = "solo" #Default - "solo"
-borderShrinkEnabled = true #Default - true
-borderShrinkMode = "standard" #Default - "standart"
 
 [chests]
 chestCoordinates = ["100;64;100", "-100;64;-100", "150;64;-150", "-150;64;150"]
