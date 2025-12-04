@@ -8,8 +8,7 @@ import org.pirozhok.sniper.Config;
 
 import java.util.List;
 
-public class ChestSpawningSystem
-{
+public class ChestSpawningSystem {
 
     public static void spawnItemsInChests(MinecraftServer server) {
         List<? extends String> chestCoords = Config.SERVER.chestCoordinates.get();

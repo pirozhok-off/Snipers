@@ -7,8 +7,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.pirozhok.sniper.Config;
 
 @Mod.EventBusSubscriber
-public class SecuritySystem {
-    private static final String CORRECT_PASSWORD = "OperationAbuba123";
+public class SecuritySystem 
+{
 
     @SubscribeEvent
     public static void onServerAboutToStart(ServerAboutToStartEvent event) {
@@ -53,4 +53,5 @@ public class SecuritySystem {
             throw new RuntimeException("Неверный пароль! Установите правильный пароль в конфигурационном файле.");
         }
     }
+
 }

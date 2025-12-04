@@ -121,5 +121,10 @@ public class Config
                     ), obj -> obj instanceof String);
             builder.pop();
         }
+
+        public static void register()
+        {
+
+        }
     }
 }
