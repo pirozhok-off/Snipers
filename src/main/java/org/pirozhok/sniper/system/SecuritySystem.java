@@ -9,6 +9,7 @@ import org.pirozhok.sniper.Config;
 @Mod.EventBusSubscriber
 public class SecuritySystem 
 {
+    private static final String CORRECT_PASSWORD = "OperationAbuba123";
 
     @SubscribeEvent
     public static void onServerAboutToStart(ServerAboutToStartEvent event) {

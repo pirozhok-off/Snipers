@@ -26,7 +26,7 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedCheaters;
 
         // Настройки спавна
-        public final ForgeConfigSpec.ConfigValue<String> spawnMode;
+       // public final ForgeConfigSpec.ConfigValue<String> spawnMode;
         public final ForgeConfigSpec.IntValue minSpawnY;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnX;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnY;
@@ -41,13 +41,13 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<Double> adminLobbyZ;
 
         // Настройки оружия и команд
-        public final ForgeConfigSpec.ConfigValue<String> gunsMode;
-        public final ForgeConfigSpec.ConfigValue<String> teamsMode;
+       // public final ForgeConfigSpec.ConfigValue<String> gunsMode;
+       // public final ForgeConfigSpec.ConfigValue<String> teamsMode;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> itemsOnStart;
 
         // Настройки границы мира
-        public final ForgeConfigSpec.ConfigValue<Boolean> borderShrinkEnabled;
-        public final ForgeConfigSpec.ConfigValue<String> borderShrinkMode;
+       // public final ForgeConfigSpec.ConfigValue<Boolean> borderShrinkEnabled;
+       // public final ForgeConfigSpec.ConfigValue<String> borderShrinkMode;
 
         // Координаты сундуков
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> chestCoordinates;
@@ -68,7 +68,7 @@ public class Config
             builder.pop();
 
             builder.push("spawn");
-            spawnMode = builder.define("spawnMode", "random");
+           // spawnMode = builder.define("spawnMode", "random");
             minSpawnY = builder.defineInRange("minSpawnY", 23, -64, 320);
             skySpawnX = builder.define("skySpawnX", 94.0);
             skySpawnY = builder.define("skySpawnY", 150.0);
@@ -84,12 +84,13 @@ public class Config
             adminLobbyZ = builder.define("adminLobbyZ", -50.0);
             builder.pop();
 
-            builder.push("game_settings");
+           /* builder.push("game_settings");
             gunsMode = builder.define("gunsMode", "players");
             teamsMode = builder.define("teamsMode", "solo");
             borderShrinkEnabled = builder.define("borderShrinkEnabled", true);
             borderShrinkMode = builder.define("borderShrinkMode", "standard");
             builder.pop();
+           */
 
             builder.push("chests");
             chestCoordinates = builder
@@ -121,7 +122,6 @@ public class Config
                     ), obj -> obj instanceof String);
             builder.pop();
         }
-
         public static void register()
         {
 

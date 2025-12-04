@@ -4,11 +4,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import org.pirozhok.sniper.Config;
 import org.pirozhok.sniper.events.Start;
 import org.pirozhok.sniper.events.End;
 import org.pirozhok.sniper.system.SecuritySystem;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
+import org.pirozhok.sniper.system.States;
+
+import java.util.Map;
 
 public class ModCommands
 {
@@ -46,20 +48,41 @@ public class ModCommands
 
         dispatcher.register(Commands.literal("sniper")
                 .requires(source -> source.hasPermission(2))
+                .then(Commands.literal("status")
+                        .executes(context -> {
+                            Map<String, Object> states = States.getAllStates();
+                            StringBuilder message = new StringBuilder("Текущие настройки:\n");
+                            for (Map.Entry<String, Object> entry : states.entrySet()) {
+                                message.append(entry.getKey())
+                                        .append(": ")
+                                        .append(entry.getValue())
+                                        .append("\n");
+                            }
+                            context.getSource().sendSuccess(() ->
+                                    Component.literal(message.toString()), false);
+                            return 1;
+                        })
+                )
+                .then(Commands.literal("reset")
+                        .executes(context -> {
+                            States.resetToDefaults();
+                            context.getSource().sendSuccess(() ->
+                                    Component.literal("Настройки сброшены к значениям по умолчанию"), true);
+                            return 1;
+                        })
+                )
                 .then(Commands.literal("game")
                         .then(Commands.literal("area")
                                 .then(Commands.literal("on")
                                         .executes(context -> {
-                                            Config.SERVER.borderShrinkEnabled.set(true);
-                                            Config.SERVER.borderShrinkEnabled.save();
+                                            States.setBorderShrinkEnabled(true);
                                             context.getSource().sendSuccess(() -> Component.literal("Сужение области включено"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("off")
                                         .executes(context -> {
-                                            Config.SERVER.borderShrinkEnabled.set(false);
-                                            Config.SERVER.borderShrinkEnabled.save();
+                                            States.setBorderShrinkEnabled(false);
                                             BorderShrinkingSystem.stopShrinking();
                                             context.getSource().sendSuccess(() -> Component.literal("Сужение области выключено"), true);
                                             return 1;
@@ -67,24 +90,21 @@ public class ModCommands
                                 )
                                 .then(Commands.literal("slow")
                                         .executes(context -> {
-                                            Config.SERVER.borderShrinkMode.set("slow");
-                                            Config.SERVER.borderShrinkMode.save();
+                                            States.setBorderShrinkMode("slow");
                                             context.getSource().sendSuccess(() -> Component.literal("Режим сужения: медленный"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("standard")
                                         .executes(context -> {
-                                            Config.SERVER.borderShrinkMode.set("standard");
-                                            Config.SERVER.borderShrinkMode.save();
+                                            States.setBorderShrinkMode("standard");
                                             context.getSource().sendSuccess(() -> Component.literal("Режим сужения: стандартный"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("fast")
                                         .executes(context -> {
-                                            Config.SERVER.borderShrinkMode.set("fast");
-                                            Config.SERVER.borderShrinkMode.save();
+                                            States.setBorderShrinkMode("fast");
                                             context.getSource().sendSuccess(() -> Component.literal("Режим сужения: быстрый"), true);
                                             return 1;
                                         })
@@ -93,16 +113,14 @@ public class ModCommands
                         .then(Commands.literal("teams")
                                 .then(Commands.literal("solo")
                                         .executes(context -> {
-                                            Config.SERVER.teamsMode.set("solo");
-                                            Config.SERVER.teamsMode.save();
+                                            States.setTeamsMode("solo");
                                             context.getSource().sendSuccess(() -> Component.literal("Режим команд: каждый за себя"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("team")
                                         .executes(context -> {
-                                            Config.SERVER.teamsMode.set("team");
-                                            Config.SERVER.teamsMode.save();
+                                            States.setTeamsMode("team");
                                             context.getSource().sendSuccess(() -> Component.literal("Режим команд: две команды"), true);
                                             return 1;
                                         })
@@ -111,16 +129,14 @@ public class ModCommands
                         .then(Commands.literal("guns")
                                 .then(Commands.literal("players")
                                         .executes(context -> {
-                                            Config.SERVER.gunsMode.set("players");
-                                            Config.SERVER.gunsMode.save();
+                                            States.setGunsMode("players");
                                             context.getSource().sendSuccess(() -> Component.literal("Оружие выдается игрокам"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("random")
                                         .executes(context -> {
-                                            Config.SERVER.gunsMode.set("random");
-                                            Config.SERVER.gunsMode.save();
+                                            States.setGunsMode("random");
                                             context.getSource().sendSuccess(() -> Component.literal("Оружие спавнится в сундуках"), true);
                                             return 1;
                                         })
@@ -129,16 +145,14 @@ public class ModCommands
                         .then(Commands.literal("playerSpawn")
                                 .then(Commands.literal("sky")
                                         .executes(context -> {
-                                            Config.SERVER.spawnMode.set("sky");
-                                            Config.SERVER.spawnMode.save();
+                                            States.setSpawnMode("sky");
                                             context.getSource().sendSuccess(() -> Component.literal("Спавн игроков: в воздухе"), true);
                                             return 1;
                                         })
                                 )
                                 .then(Commands.literal("random")
                                         .executes(context -> {
-                                            Config.SERVER.spawnMode.set("random");
-                                            Config.SERVER.spawnMode.save();
+                                            States.setSpawnMode("random");
                                             context.getSource().sendSuccess(() -> Component.literal("Спавн игроков: случайный"), true);
                                             return 1;
                                         })

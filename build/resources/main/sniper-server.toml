@@ -8,26 +8,25 @@ admins = ["Admin1", "Admin2"]
 allowedCheaters = ["Player1", "Player2"]
 
 [spawn]
-spawnMode = "random"
-minSpawnY = 60
-skySpawnX = 0.0
-skySpawnY = 120.0
-skySpawnZ = 0.0
+minSpawnY = 23
+skySpawnX = 94.0
+skySpawnY = 150.0
+skySpawnZ = -77.0
 
 [lobby]
-lobbyX = 0.0
-lobbyY = 70.0
-lobbyZ = 0.0
-adminLobbyX = 100.0
-adminLobbyY = 70.0
-adminLobbyZ = 0.0
-
-[game_settings]
-gunsMode = "players" #Default - "players"
-teamsMode = "solo" #Default - "solo"
-borderShrinkEnabled = true #Default - true
-borderShrinkMode = "standard" #Default - "standart"
+lobbyX = 99.0
+lobbyY = -12.9
+lobbyZ = -55.0
+adminLobbyX = 96.0
+adminLobbyY = -18.9
+adminLobbyZ = -50.0
 
 [chests]
 chestCoordinates = ["100;64;100", "-100;64;-100", "150;64;-150", "-150;64;150"]
 chestItems = ["tacz:pistol@1@{}", "tacz:ammo@16@{}", "tacz:rifle@1@{}", "minecraft:golden_apple@3@{}", "minecraft:ender_pearl@4@{}"]
+
+[guns]
+# Список предметов которые выдаются игрокам при старте игры. Формат: modid:item@count@nbt
+itemsOnStart = ["tacz:modern_kinetic_gun@1@{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tti_gunpack:scope_lpvo_1_6\",ZoomNumber:6}},GunCurrentAmmoCount:5,GunFireMode:\"SEMI\",GunId:\"tacz:ai_awp\",HasBulletInBarrel:1b}",
+    "tacz:modern_kinetic_gun@1@{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tacz:sight_rmr_dot\"}},GunCurrentAmmoCount:12,GunFireMode:\"SEMI\",GunId:\"tacz:p320\",HasBulletInBarrel:1b}",
+    "tacz:ammo_box@1@{AllTypeCreative:1b}"]

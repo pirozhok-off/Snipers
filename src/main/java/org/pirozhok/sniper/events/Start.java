@@ -16,6 +16,7 @@ import org.pirozhok.sniper.Config;
 import org.pirozhok.sniper.system.SecuritySystem;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
 import org.pirozhok.sniper.system.ChestSpawningSystem;
+import org.pirozhok.sniper.system.States;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,7 +50,7 @@ public class Start {
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "worldborder set 200");
 
             // 6. Спавн игроков
-            String spawnMode = Config.SERVER.spawnMode.get();
+            String spawnMode = States.getSpawnMode();
             if ("sky".equals(spawnMode)) {
                 teleportPlayersToSky(server);
             } else {
@@ -57,7 +58,7 @@ public class Start {
             }
 
             // 7. Выдача оружия
-            String gunsMode = Config.SERVER.gunsMode.get();
+            String gunsMode = States.getGunsMode();
             if ("players".equals(gunsMode)) {
                 giveWeaponsToPlayers(server);
             } else {
@@ -67,7 +68,7 @@ public class Start {
                     "give @a paraglider:paraglider 1");
 
             // 8. Распределение по командам
-            String teamsMode = Config.SERVER.teamsMode.get();
+            String teamsMode = States.getTeamsMode();
             if ("solo".equals(teamsMode)) {
                 setupSoloTeams(server);
             } else {
@@ -75,7 +76,7 @@ public class Start {
             }
 
             // 9. Запуск сужения области если включено
-            if (Config.SERVER.borderShrinkEnabled.get()) {
+            if (States.isBorderShrinkEnabled()) {
                 BorderShrinkingSystem.startShrinking(server);
             }
 
