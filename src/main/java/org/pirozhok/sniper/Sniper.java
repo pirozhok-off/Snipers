@@ -45,16 +45,26 @@ public class Sniper
     public static final String MODID = "sniper";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Sniper() {
+    public Sniper()
+    {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onServerStarting);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_SPEC, "sniper-common.toml");
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void onServerStarting(ServerStartingEvent event)
+    {
+        System.out.println("----------\n->Sniper Engine: SERVER SETUP SUCCESFULL\n----------");
     }
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             ModNetwork.register();
         });
+
+        System.out.println("----------\n->Sniper Engine: COMMON SETUP SUCCESFULL\n----------");
     }
 
     @SubscribeEvent

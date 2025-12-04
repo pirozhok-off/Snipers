@@ -1,17 +1,20 @@
 package org.pirozhok.sniper.events;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.pirozhok.sniper.Config;
 import org.pirozhok.sniper.system.SecuritySystem;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
 import org.pirozhok.sniper.system.ChestSpawningSystem;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class Start {
@@ -35,7 +38,7 @@ public class Start {
 
             // 4. Исцеление и левитация
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "effect give @a minecraft:instant_health 1 10");
-            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "effect give @a minecraft:levitation 1 2");
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "effect give @a minecraft:slow_falling 1 2");
 
             // 5. Установка границы мира
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), "worldborder set 200");
@@ -55,6 +58,8 @@ public class Start {
             } else {
                 ChestSpawningSystem.spawnItemsInChests(server);
             }
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
+                    "give @a paraglider:paraglider 1");
 
             // 8. Распределение по командам
             String teamsMode = Config.SERVER.teamsMode.get();
@@ -154,15 +159,106 @@ public class Start {
                 level.isEmptyBlock(pos.above());
     }
 
-    private static void giveWeaponsToPlayers(MinecraftServer server) {
+    private static void giveWeaponsToPlayers(MinecraftServer server)
+    {
+        List<? extends String> itemList = Config.SERVER.itemsOnStart.get();
+        if (itemList.isEmpty())
+        {
+            System.out.println("Список для выдачи предметов пуст!");
+        }
+
+        //Получаем всех игроков
+        List<ServerPlayer> players = ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers();
+
+        for (ServerPlayer player : players)
+        {
+            giveItemsToPlayers(player, itemList);
+        }
+
+
+        /*
         // Выдача стартовых предметов через команды
-        // Пример для мода TaCZ - замени на актуальные предметы
         server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a tacz:pistol 1");
+                "give @a tacz:modern_kinetic_gun{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tti_gunpack:scope_lpvo_1_6\",ZoomNumber:6}},GunCurrentAmmoCount:5,GunFireMode:\"SEMI\",GunId:\"tacz:ai_awp\",HasBulletInBarrel:1b} 1");
         server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a tacz:ammo 32");
+                "give @a tacz:modern_kinetic_gun{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tacz:sight_rmr_dot\"}},GunCurrentAmmoCount:12,GunFireMode:\"SEMI\",GunId:\"tacz:p320\",HasBulletInBarrel:1b} 1");
         server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a minecraft:bread 16");
+                "give @a tacz:ammo_box{AllTypeCreative:1b} 1");
+
+         */
+    }
+
+    private static void giveItemsToPlayers(ServerPlayer player, List<? extends String> itemList)
+    {
+        for (String itemString : itemList)
+        {
+            try
+            {
+                ItemStack itemStack = parseItemStack(itemString);
+                if (!itemStack.isEmpty())
+                {
+                    //Выдача предмета в инвентарь
+                    boolean added = player.getInventory().add(itemStack);
+                    if (!added)
+                    {
+                        player.drop(itemStack, false);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static  ItemStack parseItemStack(String itemString)
+    {
+        try {
+            String[] parts = itemString.split("@", 3);
+
+            if (parts.length<1)
+            {
+                return ItemStack.EMPTY;
+            }
+
+            //Парс ID предмета
+            String itemId = parts[0];
+            ResourceLocation resourceLocation = new ResourceLocation(itemId);
+            Item item = ForgeRegistries.ITEMS.getValue(resourceLocation);
+
+            if (item == null)
+            {
+                return ItemStack.EMPTY;
+            }
+
+            //Парс количества
+            int count = 1;
+            if (parts.length >= 2) {
+                try {
+                    count = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    System.err.println("Неверный формат количества: " + parts[1]);
+                    count = 1;
+                }
+            }
+
+            // Создаем ItemStack
+            ItemStack itemStack = new ItemStack(item, count);
+
+            // Парсим NBT тег, если есть
+            if (parts.length >= 3 && !parts[2].isEmpty()) {
+                try {
+                    CompoundTag nbt = TagParser.parseTag(parts[2]);
+                    itemStack.setTag(nbt);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return itemStack;
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return ItemStack.EMPTY;
+        }
     }
 
     private static void setupSoloTeams(MinecraftServer server) {

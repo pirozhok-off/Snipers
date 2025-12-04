@@ -13,7 +13,8 @@ public class Config
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
 
-    static {
+    static
+    {
         final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
         SERVER = specPair.getLeft();
         SERVER_SPEC = specPair.getRight();
@@ -42,6 +43,7 @@ public class Config
         // Настройки оружия и команд
         public final ForgeConfigSpec.ConfigValue<String> gunsMode;
         public final ForgeConfigSpec.ConfigValue<String> teamsMode;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> itemsOnStart;
 
         // Настройки границы мира
         public final ForgeConfigSpec.ConfigValue<Boolean> borderShrinkEnabled;
@@ -67,19 +69,19 @@ public class Config
 
             builder.push("spawn");
             spawnMode = builder.define("spawnMode", "random");
-            minSpawnY = builder.defineInRange("minSpawnY", 60, -64, 320);
-            skySpawnX = builder.define("skySpawnX", 0.0);
-            skySpawnY = builder.define("skySpawnY", 120.0);
-            skySpawnZ = builder.define("skySpawnZ", 0.0);
+            minSpawnY = builder.defineInRange("minSpawnY", 23, -64, 320);
+            skySpawnX = builder.define("skySpawnX", 94.0);
+            skySpawnY = builder.define("skySpawnY", 150.0);
+            skySpawnZ = builder.define("skySpawnZ", -77.0);
             builder.pop();
 
             builder.push("lobby");
-            lobbyX = builder.define("lobbyX", 0.0);
-            lobbyY = builder.define("lobbyY", 70.0);
-            lobbyZ = builder.define("lobbyZ", 0.0);
-            adminLobbyX = builder.define("adminLobbyX", 100.0);
-            adminLobbyY = builder.define("adminLobbyY", 70.0);
-            adminLobbyZ = builder.define("adminLobbyZ", 0.0);
+            lobbyX = builder.define("lobbyX", 99.0);
+            lobbyY = builder.define("lobbyY", -12.9);
+            lobbyZ = builder.define("lobbyZ", -55.0);
+            adminLobbyX = builder.define("adminLobbyX", 96.0);
+            adminLobbyY = builder.define("adminLobbyY", -18.9);
+            adminLobbyZ = builder.define("adminLobbyZ", -50.0);
             builder.pop();
 
             builder.push("game_settings");
@@ -106,6 +108,16 @@ public class Config
                             "tacz:rifle@1@{}",
                             "minecraft:golden_apple@3@{}",
                             "minecraft:ender_pearl@4@{}"
+                    ), obj -> obj instanceof String);
+            builder.pop();
+
+            builder.push("guns");
+            itemsOnStart = builder
+                    .comment("Список предметов которые выдаются игрокам при старте игры. Формат: modid:item@count@nbt")
+                    .defineList("itemsOnStart", Arrays.asList(
+                            "tacz:modern_kinetic_gun@1@{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tti_gunpack:scope_lpvo_1_6\",ZoomNumber:6}},GunCurrentAmmoCount:5,GunFireMode:\"SEMI\",GunId:\"tacz:ai_awp\",HasBulletInBarrel:1b}",
+                            "tacz:modern_kinetic_gun@1@{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tacz:sight_rmr_dot\"}},GunCurrentAmmoCount:12,GunFireMode:\"SEMI\",GunId:\"tacz:p320\",HasBulletInBarrel:1b}",
+                            "tacz:ammo_box@1@{AllTypeCreative:1b}"
                     ), obj -> obj instanceof String);
             builder.pop();
         }

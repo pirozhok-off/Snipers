@@ -1,5 +1,8 @@
 package org.pirozhok.sniper.events;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
+import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -7,6 +10,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.pirozhok.sniper.Config;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
 
@@ -35,6 +39,12 @@ public class End
 
             // 6. Остановка сужения границы
             BorderShrinkingSystem.stopShrinking();
+
+            // 7. Очищение чата
+            for (ServerPlayer player : ServerLifecycleHooks.getCurrentServer().getPlayerList().getPlayers())
+            {
+                player.connection.send(new ClientboundSystemChatPacket(Component.literal("\n\n\n\n\n\n\n"), false));
+            }
 
         } catch (Exception e)
         {
