@@ -49,6 +49,7 @@ public class End
     private static void setupLobbyTeams(MinecraftServer server) {
         Scoreboard scoreboard = server.getLevel(net.minecraft.world.level.Level.OVERWORLD).getScoreboard();
 
+        /*
         // Создаем команды если не существуют
         PlayerTeam lobbyTeam = scoreboard.getPlayerTeam("lobby");
         if (lobbyTeam == null) {
@@ -74,6 +75,8 @@ public class End
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                     "team join admin " + adminName);
         }
+
+         */
     }
 
     private static void teleportToLobbies(MinecraftServer server) {
