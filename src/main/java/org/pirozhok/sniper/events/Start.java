@@ -83,11 +83,9 @@ public class Start {
             // 10. Title и звук
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                     "title @a title {\"text\":\"ИГРА НАЧАЛАСЬ\", \"color\":\"green\", \"bold\":true}");
-
-            // Проигрывание кастомного звука (пример)
-           /* server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
+            // Проигрывание звука старта
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                     "playsound sniper:game_start master @a");
-           */
 
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при запуске игры: " + e.getMessage(), e);
@@ -180,18 +178,6 @@ public class Start {
         {
             giveItemsToPlayers(player, itemList);
         }
-
-
-        /*
-        // Выдача стартовых предметов через команды
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a tacz:modern_kinetic_gun{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tti_gunpack:scope_lpvo_1_6\",ZoomNumber:6}},GunCurrentAmmoCount:5,GunFireMode:\"SEMI\",GunId:\"tacz:ai_awp\",HasBulletInBarrel:1b} 1");
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a tacz:modern_kinetic_gun{AttachmentSCOPE:{Count:1b,id:\"tacz:attachment\",tag:{AttachmentId:\"tacz:sight_rmr_dot\"}},GunCurrentAmmoCount:12,GunFireMode:\"SEMI\",GunId:\"tacz:p320\",HasBulletInBarrel:1b} 1");
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "give @a tacz:ammo_box{AllTypeCreative:1b} 1");
-
-         */
     }
 
     private static void giveItemsToPlayers(ServerPlayer player, List<? extends String> itemList)
@@ -247,10 +233,10 @@ public class Start {
                 }
             }
 
-            // Создаем ItemStack
+            // ItemStack
             ItemStack itemStack = new ItemStack(item, count);
 
-            // Парсим NBT тег, если есть
+            // Парсим NBT, если есть
             if (parts.length >= 3 && !parts[2].isEmpty()) {
                 try {
                     CompoundTag nbt = TagParser.parseTag(parts[2]);

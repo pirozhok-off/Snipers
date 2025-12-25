@@ -8,6 +8,7 @@ import org.pirozhok.sniper.events.Start;
 import org.pirozhok.sniper.events.End;
 import org.pirozhok.sniper.system.SecuritySystem;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
+import org.pirozhok.sniper.system.Setup;
 import org.pirozhok.sniper.system.States;
 
 import java.util.Map;
@@ -65,11 +66,25 @@ public class ModCommands
                 )
                 .then(Commands.literal("reset")
                         .executes(context -> {
+                            if (context.getSource().getPlayer() != null &&
+                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                context.getSource().sendFailure(Component.literal("Недостаточно прав использования этой команды!"));
+                                return 0;
+                            }
                             States.resetToDefaults();
                             context.getSource().sendSuccess(() ->
                                     Component.literal("Настройки сброшены к значениям по умолчанию"), true);
                             return 1;
                         })
+                )
+                .then(Commands.literal("setup")
+                        .executes(context -> {
+                            Setup.SetupGame(context.getSource().getServer());
+                            context.getSource().sendSuccess(() ->
+                                    Component.literal("Установлены базовые настройки:\nкоманды и скорборды,\nкб для перевода игрока в гм3 после смерти"), true);
+                            return 1;
+                        })
+
                 )
                 .then(Commands.literal("game")
                         .then(Commands.literal("area")
