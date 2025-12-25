@@ -26,7 +26,6 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedCheaters;
 
         // Настройки спавна
-        public final ForgeConfigSpec.ConfigValue<String> spawnMode;
         public final ForgeConfigSpec.IntValue minSpawnY;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnX;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnY;
@@ -40,18 +39,20 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<Double> adminLobbyY;
         public final ForgeConfigSpec.ConfigValue<Double> adminLobbyZ;
 
-        // Настройки оружия и команд
-        public final ForgeConfigSpec.ConfigValue<String> gunsMode;
-        public final ForgeConfigSpec.ConfigValue<String> teamsMode;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> itemsOnStart;
-
-        // Настройки границы мира
-        public final ForgeConfigSpec.ConfigValue<Boolean> borderShrinkEnabled;
-        public final ForgeConfigSpec.ConfigValue<String> borderShrinkMode;
 
         // Координаты сундуков
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> chestCoordinates;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> chestItems;
+
+        // Настройки геймрулов
+        public final ForgeConfigSpec.ConfigValue<Boolean> doDaylightCycle;
+        public final ForgeConfigSpec.ConfigValue<Boolean> doWeatherCycle;
+        public final ForgeConfigSpec.ConfigValue<Boolean> keepInventory;
+        public final ForgeConfigSpec.ConfigValue<Boolean> showDeathMessages;
+
+        // Доп. моды
+        public final ForgeConfigSpec.ConfigValue<Boolean> mpm;
 
         public ServerConfig(ForgeConfigSpec.Builder builder)
         {
@@ -68,7 +69,6 @@ public class Config
             builder.pop();
 
             builder.push("spawn");
-            spawnMode = builder.define("spawnMode", "random");
             minSpawnY = builder.defineInRange("minSpawnY", 23, -64, 320);
             skySpawnX = builder.define("skySpawnX", 94.0);
             skySpawnY = builder.define("skySpawnY", 150.0);
@@ -82,13 +82,6 @@ public class Config
             adminLobbyX = builder.define("adminLobbyX", 96.0);
             adminLobbyY = builder.define("adminLobbyY", -18.9);
             adminLobbyZ = builder.define("adminLobbyZ", -50.0);
-            builder.pop();
-
-            builder.push("game_settings");
-            gunsMode = builder.define("gunsMode", "players");
-            teamsMode = builder.define("teamsMode", "solo");
-            borderShrinkEnabled = builder.define("borderShrinkEnabled", true);
-            borderShrinkMode = builder.define("borderShrinkMode", "standard");
             builder.pop();
 
             builder.push("chests");
@@ -120,8 +113,27 @@ public class Config
                             "tacz:ammo_box@1@{AllTypeCreative:1b}"
                     ), obj -> obj instanceof String);
             builder.pop();
-        }
 
+            builder.push("setup").comment("Для команды /sniper setup");
+            doDaylightCycle = builder
+                    .comment("Нужно автоматически запрещать смену дня и ночи? True - смена дня и ночи не будет изменена, false - будет отключена смена дня и ночи")
+                    .define("doDaylightCycle", false);
+            doWeatherCycle = builder
+                    .comment("Нужно автоматически запрещать смену погоды? True - смена погоды не будет изменена, false - будет отключена смена погоды")
+                    .define("doWeatherCycle", false);
+            keepInventory = builder
+                    .comment("Нужно автоматически запрещать смену погоды? True - сохранение инвентаря будет включено, false - сохранение инвентаря не будет изменено")
+                    .define("keepInventory", false);
+            showDeathMessages = builder
+                    .comment("Показывать сообщение о смерти игрока? True = не менять эту настройку, false - игрокам не будет показыватся сообщение о смерти")
+                    .define("showDeathMessages", true);
+            builder.pop();
+
+            builder.push("Additional mods").comment("Дополнительные моды");
+            mpm = builder
+                    .comment("Есть в сборке мод MorePlayerModels? По умолчанию: есть")
+                    .define("mpm", true);
+        }
         public static void register()
         {
 
