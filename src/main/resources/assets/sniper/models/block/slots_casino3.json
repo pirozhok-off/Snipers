@@ -1,0 +1,9 @@
+{
+  "parent": "sniper:custom/slots_casino3",
+  "textures": {
+    "all": "sniper:block/slots_casino3",
+    "particle": "sniper:block/slots_casino3",
+    "0": "sniper:block/slots_casino3"
+  },
+  "render_type": "solid"
+}

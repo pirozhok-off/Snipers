@@ -254,9 +254,6 @@ public class Start {
     }
 
     private static void setupSoloTeams(MinecraftServer server) {
-        // Создаем команду sniper если не существует
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "team add sniper \"{\\\"text\\\":\\\"Sniper\\\",\\\"color\\\":\\\"white\\\"}\"");
         server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                 "team join sniper @a");
     }
@@ -264,12 +261,6 @@ public class Start {
     private static void distributeToTeams(MinecraftServer server) {
         List<ServerPlayer> players = new ArrayList<>(server.getPlayerList().getPlayers());
         Collections.shuffle(players);
-
-        // Создаем команды
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "team add yellow \"{\\\"text\\\":\\\"Yellow\\\",\\\"color\\\":\\\"yellow\\\"}\"");
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                "team add purple \"{\\\"text\\\":\\\"Purple\\\",\\\"color\\\":\\\"purple\\\"}\"");
 
         // Распределяем игроков
         for (int i = 0; i < players.size(); i++) {

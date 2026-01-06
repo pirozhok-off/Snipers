@@ -3,14 +3,17 @@ package org.pirozhok.sniper;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.pirozhok.sniper.cheats.KeyInputHandler;
-import org.pirozhok.sniper.cheats.ModCommands;
+import org.pirozhok.sniper.blocks.SniperBlocks;
+import org.pirozhok.sniper.commands.SniperCommands;
+import org.pirozhok.sniper.items.SniperItems;
 import org.pirozhok.sniper.networking.ModNetwork;
 import org.slf4j.Logger;
 
@@ -22,9 +25,19 @@ public class Sniper
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public Sniper() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC, "sniper-server.toml");
         MinecraftForge.EVENT_BUS.register(this);
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        bus.addListener(this::setup);
+        bus.addListener(this::clientSetup);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC, "sniper-server.toml");
+
+        // Регистрируем блоки, предметы и вкладки
+        SniperTabs.REGISTRY.register(bus);
+        SniperBlocks.BLOCKS.register(bus);
+        SniperItems.ITEMS.register(bus);
+        SniperMenu.REGISTRY.register(bus);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -35,6 +48,14 @@ public class Sniper
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-        ModCommands.register(event.getDispatcher());
+        SniperCommands.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void clientSetup(FMLClientSetupEvent event)
+    {
+        event.enqueueWork(() -> {
+
+        });
     }
 }

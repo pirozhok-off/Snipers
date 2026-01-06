@@ -1,0 +1,21 @@
+{
+"gui.button.sniper.dodep": "ДЕПНУТЬ",
+"gui.button.sniper.getdep": "забрать",
+"gui.sniper.chanses": "Шансы",
+"gui.sniper.chanses_casino": "§6Шансы казино:",
+"gui.sniper.chanse_x0": "§7• 60% - x0",
+"gui.sniper.chanse_x15": "§a• 25% - x1.5",
+"gui.sniper.chanse_x2": "§e• 10% - x2",
+"gui.sniper.chanse_x3": "§6• 4% - x3",
+"gui.sniper.chanse_x5": "§c• 1% - ДЖЕКПОТ x5",
+
+"item_group.sniper.sniper_tab": "Снайперы",
+"item.sniper.sniper": "Иконка снайпер таба",
+
+"block.sniper.casinotable_1": "Стол казино 1",
+"block.sniper.slots_casino3": "Казино автомат 3",
+"block.sniper.slots_casino2": "Казино автомат 2",
+"block.sniper.slots_casino1": "Казино автомат 1",
+"block.sniper.slots_casino": "Казино автомат",
+"block.sniper.poker_table": "Покерный стол"
+}

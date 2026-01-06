@@ -2,11 +2,12 @@ package org.pirozhok.sniper.networking;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import org.pirozhok.sniper.Sniper;
+import org.pirozhok.sniper.networking.packets.CasinoBetPacket;
+import org.pirozhok.sniper.networking.packets.CasinoCollectPacket;
 
 public class ModNetwork {
     private static final String PROTOCOL_VERSION = "1";
@@ -20,11 +21,11 @@ public class ModNetwork {
     private static int packetId = 0;
 
     public static void register() {
-        CHANNEL.registerMessage(packetId++, CheatPacket.class,
-                CheatPacket::encode, CheatPacket::decode, CheatPacket::handle);
-
-        CHANNEL.registerMessage(packetId++, OpenCheatGUIPacket.class,
-                OpenCheatGUIPacket::encode, OpenCheatGUIPacket::decode, OpenCheatGUIPacket::handle);
+        // Регистрируем пакеты для казика
+        CHANNEL.registerMessage(packetId++, CasinoBetPacket.class,
+                CasinoBetPacket::encode, CasinoBetPacket::decode, CasinoBetPacket::handle);
+        CHANNEL.registerMessage(packetId++, CasinoCollectPacket.class,
+                CasinoCollectPacket::encode, CasinoCollectPacket::decode, CasinoCollectPacket::handle);
     }
 
     public static void sendToServer(Object message) {

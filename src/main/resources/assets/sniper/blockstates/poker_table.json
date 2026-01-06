@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sniper:block/poker_table"
+    },
+    "facing=east": {
+      "model": "sniper:block/poker_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sniper:block/poker_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sniper:block/poker_table",
+      "y": 270
+    }
+  }
+}

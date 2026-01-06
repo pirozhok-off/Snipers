@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "sniper:block/slots_casino"
+    },
+    "facing=east": {
+      "model": "sniper:block/slots_casino",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "sniper:block/slots_casino",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "sniper:block/slots_casino",
+      "y": 270
+    }
+  }
+}

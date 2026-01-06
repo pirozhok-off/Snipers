@@ -1,4 +1,4 @@
-package org.pirozhok.sniper.cheats;
+package org.pirozhok.sniper.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -13,7 +13,7 @@ import org.pirozhok.sniper.system.States;
 
 import java.util.Map;
 
-public class ModCommands
+public class SniperCommands
 {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -79,9 +79,14 @@ public class ModCommands
                 )
                 .then(Commands.literal("setup")
                         .executes(context -> {
+                            // Проверяем доступ
+                            if (context.getSource().getPlayer() != null &&
+                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                context.getSource().sendFailure(Component.literal("Недостаточно прав использования этой команды!"));
+                                return 0;
+                            }
                             Setup.SetupGame(context.getSource().getServer());
-                            context.getSource().sendSuccess(() ->
-                                    Component.literal("Установлены базовые настройки:\nкоманды и скорборды,\nкб для перевода игрока в гм3 после смерти"), true);
+                            context.getSource().sendSuccess(() -> Component.literal("Установлены базовые игровые настройки"), true);
                             return 1;
                         })
 

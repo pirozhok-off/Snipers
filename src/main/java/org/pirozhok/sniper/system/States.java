@@ -12,6 +12,7 @@ public class States
     private static String teamsMode = "solo";
     private static boolean borderShrinkEnabled = true;
     private static String borderShrinkMode = "standard";
+    private static boolean gameIsRunning = false;
 
     //Хранение состояний
     private static final Map<String, Object> stateMap = new HashMap<>();
@@ -24,12 +25,18 @@ public class States
         stateMap.put("teamsMode", teamsMode);
         stateMap.put("borderShrinkEnabled", borderShrinkEnabled);
         stateMap.put("borderShrinkMode", borderShrinkMode);
+        stateMap.put("gameIsRunning", gameIsRunning);
     }
 
     //Геттеры
     public static String getSpawnMode()
     {
         return stateMap.get("spawnMode").toString();
+    }
+
+    public static boolean isGameIsRunning()
+    {
+        return (boolean) stateMap.get("gameIsRunning");
     }
 
     public static String getGunsMode()
@@ -73,6 +80,11 @@ public class States
         stateMap.put("borderShrinkEnabled", enabled);
     }
 
+    public static void setGameIsRunning(boolean disabled)
+    {
+        stateMap.put("gameIsRunning", disabled);
+    }
+
     public static void setBorderShrinkMode(String mode)
     {
         stateMap.put("borderShrinkMode", mode);
@@ -86,6 +98,7 @@ public class States
         stateMap.put("teamsMode", teamsMode);
         stateMap.put("borderShrinkEnabled", borderShrinkEnabled);
         stateMap.put("borderShrinkMode", borderShrinkMode);
+        stateMap.put("gameIsRunning", gameIsRunning);
     }
 
     // Метод для получения всех состояний (для отладки)

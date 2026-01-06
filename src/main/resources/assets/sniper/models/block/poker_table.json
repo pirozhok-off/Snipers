@@ -1,0 +1,9 @@
+{
+  "parent": "sniper:custom/poker_table",
+  "textures": {
+    "all": "sniper:block/poker_table",
+    "particle": "sniper:block/poker_table",
+    "0": "sniper:block/poker_table"
+  },
+  "render_type": "solid"
+}

@@ -23,7 +23,6 @@ public class Config
     public static class ServerConfig {
         public final ForgeConfigSpec.ConfigValue<String> password;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> admins;
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedCheaters;
 
         // Настройки спавна
         public final ForgeConfigSpec.IntValue minSpawnY;
@@ -53,6 +52,7 @@ public class Config
 
         // Доп. моды
         public final ForgeConfigSpec.ConfigValue<Boolean> mpm;
+        public final ForgeConfigSpec.ConfigValue<Boolean> coinmod;
 
         public ServerConfig(ForgeConfigSpec.Builder builder)
         {
@@ -63,9 +63,6 @@ public class Config
             admins = builder
                     .comment("Список админов по никнеймам")
                     .defineList("admins", Arrays.asList("pirozhoK_off", "Admin2"), obj -> obj instanceof String);
-            allowedCheaters = builder
-                    .comment("Список игроков с доступом к читам")
-                    .defineList("allowedCheaters", Arrays.asList("pirozhoK_off", "Player2"), obj -> obj instanceof String);
             builder.pop();
 
             builder.push("spawn");
@@ -133,6 +130,9 @@ public class Config
             mpm = builder
                     .comment("Есть в сборке мод MorePlayerModels? По умолчанию: есть")
                     .define("mpm", true);
+            coinmod = builder
+                    .comment("Есть ли в сборке мод на золотую монетку от пирожКа? По умолчанию: есть")
+                    .define("coinmod", true);
         }
         public static void register()
         {

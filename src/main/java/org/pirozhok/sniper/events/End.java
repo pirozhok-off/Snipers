@@ -47,23 +47,7 @@ public class End
     }
 
     private static void setupLobbyTeams(MinecraftServer server) {
-        Scoreboard scoreboard = server.getLevel(net.minecraft.world.level.Level.OVERWORLD).getScoreboard();
 
-        /*
-        // Создаем команды если не существуют
-        PlayerTeam lobbyTeam = scoreboard.getPlayerTeam("lobby");
-        if (lobbyTeam == null) {
-            lobbyTeam = scoreboard.addPlayerTeam("lobby");
-            lobbyTeam.setDisplayName(net.minecraft.network.chat.Component.literal("Lobby"));
-            lobbyTeam.setColor(net.minecraft.ChatFormatting.GRAY);
-        }
-
-        PlayerTeam adminTeam = scoreboard.getPlayerTeam("admin");
-        if (adminTeam == null) {
-            adminTeam = scoreboard.addPlayerTeam("admin");
-            adminTeam.setDisplayName(net.minecraft.network.chat.Component.literal("Admin"));
-            adminTeam.setColor(net.minecraft.ChatFormatting.RED);
-        }
 
         List<String> adminNames = (List<String>) Config.SERVER.admins.get();
 
@@ -75,8 +59,6 @@ public class End
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                     "team join admin " + adminName);
         }
-
-         */
     }
 
     private static void teleportToLobbies(MinecraftServer server) {
