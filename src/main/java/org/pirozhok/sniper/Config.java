@@ -29,6 +29,11 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnX;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnY;
         public final ForgeConfigSpec.ConfigValue<Double> skySpawnZ;
+        public final ForgeConfigSpec.IntValue centerX;
+        public final ForgeConfigSpec.IntValue centerZ;
+        public final ForgeConfigSpec.IntValue spawnRadius;
+        public final ForgeConfigSpec.IntValue minHorizontalDistance;
+        public final ForgeConfigSpec.IntValue minVerticalDistance;
 
         // Настройки лобби
         public final ForgeConfigSpec.ConfigValue<Double> lobbyX;
@@ -54,6 +59,8 @@ public class Config
         public final ForgeConfigSpec.ConfigValue<Boolean> mpm;
         public final ForgeConfigSpec.ConfigValue<Boolean> coinmod;
 
+        public final ForgeConfigSpec.IntValue glowIntervalSeconds;
+
         public ServerConfig(ForgeConfigSpec.Builder builder)
         {
             builder.push("security");
@@ -70,6 +77,11 @@ public class Config
             skySpawnX = builder.define("skySpawnX", 94.0);
             skySpawnY = builder.define("skySpawnY", 150.0);
             skySpawnZ = builder.define("skySpawnZ", -77.0);
+            centerX = builder.defineInRange("centerX", 0, -30000000, 30000000);
+            centerZ = builder.defineInRange("centerZ", 0, -30000000, 30000000);
+            spawnRadius = builder.defineInRange("spawnRadius", 1000, 100, 5000);
+            minHorizontalDistance = builder.defineInRange("minHorizontalDistance", 30, 10, 100);
+            minVerticalDistance = builder.defineInRange("minVerticalDistance", 8, 2, 20);
             builder.pop();
 
             builder.push("lobby");
@@ -111,6 +123,12 @@ public class Config
                     ), obj -> obj instanceof String);
             builder.pop();
 
+            builder.push("gameplay");
+            glowIntervalSeconds = builder
+                    .comment("Интервал в секундах между выдачей эффекта свечения всем живым игрокам (0 - отключить)")
+                    .defineInRange("glowIntervalSeconds", 30, 0, 300);
+            builder.pop();
+
             builder.push("setup").comment("Для команды /sniper setup");
             doDaylightCycle = builder
                     .comment("Нужно автоматически запрещать смену дня и ночи? True - смена дня и ночи не будет изменена, false - будет отключена смена дня и ночи")
@@ -133,10 +151,6 @@ public class Config
             coinmod = builder
                     .comment("Есть ли в сборке мод на золотую монетку от пирожКа? По умолчанию: есть")
                     .define("coinmod", true);
-        }
-        public static void register()
-        {
-
         }
     }
 }

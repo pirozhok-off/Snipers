@@ -6,21 +6,13 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.behavior.GoAndGiveItemsToTarget;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.pirozhok.sniper.Config;
-import org.pirozhok.sniper.system.SecuritySystem;
-import org.pirozhok.sniper.system.BorderShrinkingSystem;
-import org.pirozhok.sniper.system.ChestSpawningSystem;
-import org.pirozhok.sniper.system.States;
+import org.pirozhok.sniper.system.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class Start {
@@ -28,7 +20,7 @@ public class Start {
     public static void startGame(MinecraftServer server) {
         // Проверка безопасности для первого игрока (хоста)
         List<ServerPlayer> players = server.getPlayerList().getPlayers();
-        if (!players.isEmpty() && !SecuritySystem.hasAccess(players.get(0))) {
+        if (!players.isEmpty() && !zxcivanzolo.hasAccess(players.get(0))) {
             throw new RuntimeException("Недостаточно прав для запуска игры!");
         }
 
@@ -79,13 +71,14 @@ public class Start {
             if (States.isBorderShrinkEnabled()) {
                 BorderShrinkingSystem.startShrinking(server);
             }
+            // 10. Запуск свечения игроков
+            if (Config.SERVER.glowIntervalSeconds.get() > 0) {
+                GlowScheduler.start(server);
+            }
 
-            // 10. Title и звук
+            // 11. Title
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                     "title @a title {\"text\":\"ИГРА НАЧАЛАСЬ\", \"color\":\"green\", \"bold\":true}");
-            // Проигрывание звука старта
-            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                    "playsound sniper:game_start master @a");
 
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при запуске игры: " + e.getMessage(), e);
@@ -104,42 +97,68 @@ public class Start {
     }
 
     private static void teleportPlayersRandom(MinecraftServer server) {
+        int centerX = Config.SERVER.centerX.get();
+        int centerZ = Config.SERVER.centerZ.get();
+        int radius = Config.SERVER.spawnRadius.get();
+        int minHorizontal = Config.SERVER.minHorizontalDistance.get();
+        int minVertical = Config.SERVER.minVerticalDistance.get();
         int minY = Config.SERVER.minSpawnY.get();
+
         List<ServerPlayer> players = new ArrayList<>(server.getPlayerList().getPlayers());
         Collections.shuffle(players);
+        List<BlockPos> usedPositions = new ArrayList<>();
 
         Random random = new Random();
-        int worldBorder = (int) server.overworld().getWorldBorder().getSize();
-        int halfBorder = worldBorder / 2;
 
         for (ServerPlayer player : players) {
-            boolean foundValidPosition = false;
+            BlockPos spawnPos = null;
             int attempts = 0;
+            final int maxAttempts = 100;
 
-            while (!foundValidPosition && attempts < 50) {
-                int x = random.nextInt(worldBorder) - halfBorder;
-                int z = random.nextInt(worldBorder) - halfBorder;
+            while (spawnPos == null && attempts < maxAttempts) {
+                // Точка в круге
+                double angle = random.nextDouble() * 2 * Math.PI;
+                double r = Math.sqrt(random.nextDouble()) * radius; // равномерное распределение по площади
+                int x = centerX + (int)(r * Math.cos(angle));
+                int z = centerZ + (int)(r * Math.sin(angle));
 
-                // Находим высоту поверхности
+                // Загрузка чанка для получения корректной высоты
+                var chunk = server.overworld().getChunk(x >> 4, z >> 4);
                 int y = findSurfaceY(server, x, z, minY);
+                if (y <= minY) continue;
 
-                if (y > minY) {
-                    BlockPos spawnPos = new BlockPos(x, y + 1, z);
-                    if (isSafeSpawnPosition(server, spawnPos)) {
-                        player.teleportTo(server.getLevel(player.level().dimension()),
-                                x + 0.5, y + 1, z + 0.5,
-                                player.getYRot(), player.getXRot());
-                        foundValidPosition = true;
+                BlockPos candidate = new BlockPos(x, y + 1, z);
+                if (!isSafeSpawnPosition(server, candidate)) continue;
+
+                // Дистанция между игроками
+                boolean tooClose = false;
+                for (BlockPos used : usedPositions) {
+                    double dx = candidate.getX() - used.getX();
+                    double dz = candidate.getZ() - used.getZ();
+                    double dy = candidate.getY() - used.getY();
+                    double horDistSq = dx*dx + dz*dz;
+                    if (horDistSq < minHorizontal * minHorizontal ||
+                            (Math.abs(dy) < minVertical && horDistSq < 400)) { //20 блоков по горизонтали при вертикальной близости
+                        tooClose = true;
+                        break;
                     }
+                }
+                if (!tooClose) {
+                    spawnPos = candidate;
+                    usedPositions.add(spawnPos);
                 }
                 attempts++;
             }
 
-            // Если не нашли валидную позицию, телепортируем в центр
-            if (!foundValidPosition) {
-                player.teleportTo(server.getLevel(player.level().dimension()),
-                        0, minY + 10, 0, player.getYRot(), player.getXRot());
+            if (spawnPos == null) {
+                // Запасная позиция в центре
+                int y = findSurfaceY(server, centerX, centerZ, minY);
+                spawnPos = new BlockPos(centerX, y + 1, centerZ);
             }
+
+            player.teleportTo(server.getLevel(player.level().dimension()),
+                    spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5,
+                    player.getYRot(), player.getXRot());
         }
     }
 

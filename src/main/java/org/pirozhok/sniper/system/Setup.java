@@ -17,7 +17,7 @@ public class Setup
     {
         // Проверка безопасности для первого игрока (хоста)
         List<ServerPlayer> players = server.getPlayerList().getPlayers();
-        if (!players.isEmpty() && !SecuritySystem.hasAccess(players.get(0))) {
+        if (!players.isEmpty() && !zxcivanzolo.hasAccess(players.get(0))) {
             throw new RuntimeException("Недостаточно прав для запуска игры!");
         }
 

@@ -6,7 +6,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import org.pirozhok.sniper.events.Start;
 import org.pirozhok.sniper.events.End;
-import org.pirozhok.sniper.system.SecuritySystem;
+import org.pirozhok.sniper.system.zxcivanzolo;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
 import org.pirozhok.sniper.system.Setup;
 import org.pirozhok.sniper.system.States;
@@ -23,7 +23,7 @@ public class SniperCommands
                         .executes(context -> {
                             // Проверяем доступ
                             if (context.getSource().getPlayer() != null &&
-                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                    !zxcivanzolo.hasAccess(context.getSource().getPlayer())) {
                                 context.getSource().sendFailure(Component.literal("Недостаточно прав для запуска игры!"));
                                 return 0;
                             }
@@ -36,7 +36,7 @@ public class SniperCommands
                         .executes(context -> {
                             // Проверяем доступ
                             if (context.getSource().getPlayer() != null &&
-                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                    !zxcivanzolo.hasAccess(context.getSource().getPlayer())) {
                                 context.getSource().sendFailure(Component.literal("Недостаточно прав для завершения игры!"));
                                 return 0;
                             }
@@ -67,7 +67,7 @@ public class SniperCommands
                 .then(Commands.literal("reset")
                         .executes(context -> {
                             if (context.getSource().getPlayer() != null &&
-                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                    !zxcivanzolo.hasAccess(context.getSource().getPlayer())) {
                                 context.getSource().sendFailure(Component.literal("Недостаточно прав использования этой команды!"));
                                 return 0;
                             }
@@ -81,7 +81,7 @@ public class SniperCommands
                         .executes(context -> {
                             // Проверяем доступ
                             if (context.getSource().getPlayer() != null &&
-                                    !SecuritySystem.hasAccess(context.getSource().getPlayer())) {
+                                    !zxcivanzolo.hasAccess(context.getSource().getPlayer())) {
                                 context.getSource().sendFailure(Component.literal("Недостаточно прав использования этой команды!"));
                                 return 0;
                             }

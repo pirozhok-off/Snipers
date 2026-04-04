@@ -3,10 +3,12 @@ package org.pirozhok.sniper.system;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.pirozhok.sniper.Config;
 
 import java.util.List;
+import java.util.Random;
 
 public class ChestSpawningSystem {
 
@@ -40,21 +42,27 @@ public class ChestSpawningSystem {
     private static void fillChestWithItems(ChestBlockEntity chest) {
         // Очищаем сундук
         for (int i = 0; i < chest.getContainerSize(); i++) {
-            chest.setItem(i, net.minecraft.world.item.ItemStack.EMPTY);
+            chest.setItem(i, ItemStack.EMPTY);
         }
 
         List<? extends String> itemsConfig = Config.SERVER.chestItems.get();
-        java.util.Random random = new java.util.Random();
+        if (itemsConfig.isEmpty()) return;
 
-        // Заполняем 3-6 случайными предметами
-        int itemsToAdd = random.nextInt(4) + 3;
-        for (int i = 0; i < itemsToAdd; i++) {
-            if (itemsConfig.isEmpty()) continue;
+        Random random = new Random();
+        // Будет ли сундук вообще содержать предметы (90% шанс)
+        if (random.nextDouble() < 0.1) return; // 10% сундуков пусты
 
+        // Количество разных типов предметов (от 1 до 5)
+        int numItemTypes = random.nextInt(5) + 1;
+        for (int i = 0; i < numItemTypes; i++) {
             String itemConfig = itemsConfig.get(random.nextInt(itemsConfig.size()));
-            net.minecraft.world.item.ItemStack stack = parseItemStack(itemConfig);
-
+            ItemStack stack = parseItemStack(itemConfig);
             if (!stack.isEmpty()) {
+                // Определяем случайное количество предметов (от 1 до указанного в конфиге, но не больше)
+                int maxCount = stack.getCount();
+                int finalCount = maxCount == 1 ? 1 : random.nextInt(maxCount) + 1;
+                stack.setCount(finalCount);
+                // Кладём в случайный пустой слот
                 int slot = findEmptySlot(chest, random);
                 if (slot != -1) {
                     chest.setItem(slot, stack);

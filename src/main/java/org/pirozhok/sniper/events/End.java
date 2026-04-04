@@ -1,14 +1,13 @@
 package org.pirozhok.sniper.events;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Scoreboard;
-import net.minecraft.world.scores.Team;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import org.pirozhok.sniper.Config;
 import org.pirozhok.sniper.system.BorderShrinkingSystem;
+import org.pirozhok.sniper.system.GlowScheduler;
 
 import java.util.*;
 
@@ -36,9 +35,15 @@ public class End
             // 6. Остановка сужения границы
             BorderShrinkingSystem.stopShrinking();
 
-            // 7. Очищение чата
+            // 7. Остановка свечения
+            GlowScheduler.stop();
+
+            // 8. Очистка сундуков
+            clearChests(server);
+
+            // 9. Очистка предметов
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
-                    "tellraw @a {\"text\":\"n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\"}");
+                    "kill @e[type=item]");
 
         } catch (Exception e)
         {
@@ -85,6 +90,30 @@ public class End
                 player.teleportTo(server.getLevel(player.level().dimension()),
                         lobbyX, lobbyY, lobbyZ,
                         player.getYRot(), player.getXRot());
+            }
+        }
+    }
+
+    private static void clearChests(MinecraftServer server) {
+        List<? extends String> chestCoords = Config.SERVER.chestCoordinates.get();
+        var level = server.overworld();
+        for (String coord : chestCoords) {
+            try {
+                String[] parts = coord.split(";");
+                if (parts.length != 3) continue;
+                int x = Integer.parseInt(parts[0].trim());
+                int y = Integer.parseInt(parts[1].trim());
+                int z = Integer.parseInt(parts[2].trim());
+                BlockPos pos = new BlockPos(x, y, z);
+                var blockEntity = level.getBlockEntity(pos);
+                if (blockEntity instanceof ChestBlockEntity chest) {
+                    for (int i = 0; i < chest.getContainerSize(); i++) {
+                        chest.setItem(i, ItemStack.EMPTY);
+                    }
+                    chest.setChanged();
+                }
+            } catch (Exception e) {
+                System.err.println("Ошибка очистки сундука: " + coord);
             }
         }
     }

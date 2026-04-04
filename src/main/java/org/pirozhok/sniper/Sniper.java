@@ -29,11 +29,9 @@ public class Sniper
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         bus.addListener(this::setup);
-        bus.addListener(this::clientSetup);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC, "sniper-server.toml");
 
-        // Регистрируем блоки, предметы и вкладки
         SniperTabs.REGISTRY.register(bus);
         SniperBlocks.BLOCKS.register(bus);
         SniperItems.ITEMS.register(bus);
@@ -51,11 +49,4 @@ public class Sniper
         SniperCommands.register(event.getDispatcher());
     }
 
-    @SubscribeEvent
-    public void clientSetup(FMLClientSetupEvent event)
-    {
-        event.enqueueWork(() -> {
-
-        });
-    }
 }
