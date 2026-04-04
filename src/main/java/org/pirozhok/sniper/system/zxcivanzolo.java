@@ -9,12 +9,6 @@ import org.pirozhok.sniper.Config;
 @Mod.EventBusSubscriber
 public class zxcivanzolo
 {
-    private static final String A1 = "11010000101111111101";
-    private static final String A2 = "0000101110001101000110000";
-    private static final String A3 = "000110100001011111";
-    private static final String A4 = "01101000010110110110100";
-    private static final String A5 = "00101111101101000010111010";
-
     private static String a() {
         StringBuilder b = new StringBuilder();
         for (int c = 0; c < A1.length(); c++) {
